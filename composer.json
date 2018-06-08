@@ -16,7 +16,8 @@
     "require": {
         "silverstripe/recipe-cms": "^1.0@dev",
         "silverstripe/vendor-plugin": "^1.0@dev",
-        "symbiote/silverstripe-gridfieldextensions": "^3.0@dev"
+        "symbiote/silverstripe-gridfieldextensions": "^3.0@dev",
+        "unclecheese/display-logic": "^2.0"
     },
     "require-dev": {
         "phpunit/PHPUnit": "^5.7",
