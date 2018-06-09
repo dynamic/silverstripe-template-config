@@ -2,6 +2,7 @@
 
 namespace Dynamic\TemplateConfig\Tests\ORM;
 
+use Dynamic\TemplateConfig\ORM\BrandingDataExtension;
 use SilverStripe\Assets\Image;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Core\Injector\Injector;
@@ -12,7 +13,7 @@ use SilverStripe\SiteConfig\SiteConfig;
 /**
  * Class TemplateConfigTest.
  */
-class TemplateConfigTest extends SapphireTest
+class BrandingDataExtensionTest extends SapphireTest
 {
     /**
      * @var array
@@ -26,7 +27,7 @@ class TemplateConfigTest extends SapphireTest
     {
         parent::setUp();
 
-        SiteConfig::add_extension(TemplateConfig::class);
+        SiteConfig::add_extension(BrandingDataExtension::class);
     }
 
     /**

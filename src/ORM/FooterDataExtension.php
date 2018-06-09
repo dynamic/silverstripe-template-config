@@ -16,7 +16,7 @@ use Dynamic\TemplateConfig\Model\NavigationColumn;
 /**
  * Class FooterNavigationManager.
  */
-class FooterNavigationManager extends DataExtension
+class FooterDataExtension extends DataExtension
 {
     /**
      * @var array
@@ -45,7 +45,7 @@ class FooterNavigationManager extends DataExtension
             );
 
             $fields->addFieldsToTab('Root.Footer', array(
-                HeaderField::create('FooterHD', 'Footer', 1),
+                HeaderField::create('FooterHD', 'Footer Navigation', 3),
                 LiteralField::create(
                     'FooterDescrip',
                     '<p>Add columns to the footer area of your template. After you create a column, 

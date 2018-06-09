@@ -10,7 +10,7 @@ use SilverStripe\Forms\FieldList;
 /**
  * Class FooterNavigationManagerTest.
  */
-class FooterNavigationManagerTest extends SapphireTest
+class FooterDataExtensionTest extends SapphireTest
 {
     /**
      * @var string

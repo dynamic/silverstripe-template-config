@@ -17,7 +17,7 @@ use Symbiote\GridFieldExtensions\GridFieldAddExistingSearchButton;
 /**
  * Class UtilityNavigationManager.
  */
-class UtilityNavigationManager extends DataExtension
+class UtilityDataExtension extends DataExtension
 {
     /**
      * @var array
@@ -55,7 +55,7 @@ class UtilityNavigationManager extends DataExtension
             );
 
             $fields->addFieldsToTab('Root.Utility', array(
-                HeaderField::create('UtilityHD', 'Utility Navigation', 2),
+                HeaderField::create('UtilityHD', 'Utility Navigation', 3),
                 LiteralField::create(
                     'UtilityDescrip',
                     '<p>Add links to the utility navigation area of your template.</p>'
