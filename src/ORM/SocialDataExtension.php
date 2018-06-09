@@ -11,7 +11,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataExtension;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
-class SocialConfig extends DataExtension
+class SocialDataExtension extends DataExtension
 {
     /**
      * @var array
@@ -36,7 +36,7 @@ class SocialConfig extends DataExtension
         );
 
         $fields->addFieldsToTab('Root.Social', array(
-            HeaderField::create('SocialHD', 'Social Links', 1),
+            HeaderField::create('SocialHD', 'Social Properties', 3),
             LiteralField::create('SocialDescrip', '<p>Add links to your social media properties</p>'),
             HeaderField::create('SociallinkHD', 'Links', 2),
             $socialLinks,

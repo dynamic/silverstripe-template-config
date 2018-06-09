@@ -9,7 +9,7 @@ use SilverStripe\Forms\FieldList;
 /**
  * Class SocialConfigTest.
  */
-class SocialConfigTest extends SapphireTest
+class SocialDataExtensionTest extends SapphireTest
 {
     /**
      * @var string

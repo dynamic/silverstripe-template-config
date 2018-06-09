@@ -12,7 +12,7 @@ use SilverStripe\SiteConfig\SiteConfig;
 /**
  * Class TemplateConfigTest.
  */
-class TemplateConfigTest extends SapphireTest
+class BrandingDataExtensionTest extends SapphireTest
 {
     /**
      * @var array

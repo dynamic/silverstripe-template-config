@@ -17,7 +17,7 @@ use SilverStripe\Assets\Image;
  * @property string $TitleLogo
  * @property int $LogoID
  */
-class TemplateConfig extends DataExtension
+class BrandingDataExtension extends DataExtension
 {
     /**
      * @var array
@@ -69,7 +69,7 @@ class TemplateConfig extends DataExtension
         ]);
 
         $fields->addFieldsToTab('Root.Main', array(
-            HeaderField::create('BrandingHD', 'Branding', 2),
+            HeaderField::create('BrandingHD', 'Branding', 3),
             LiteralField::create('HeaderDescrip', '<p>Adjust the settings of your template header.</p>'),
             $titlelogo = OptionsetField::create('TitleLogo', 'Branding', $logoOptions),
             $title = TextField::create("Title", _t(SiteConfig::class . '.SITETITLE', "Site title")),

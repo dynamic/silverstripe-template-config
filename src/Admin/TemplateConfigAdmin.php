@@ -147,7 +147,7 @@ class TemplateConfigAdmin extends LeftAndMain
      */
     public function save_templateconfig($data, $form)
     {
-        $config = TemplateConfigSetting::current_theme_config();
+        $config = TemplateConfigSetting::current_template_config();
         $form->saveInto($config);
         try {
             $config->write();

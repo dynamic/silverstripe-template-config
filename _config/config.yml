@@ -3,7 +3,7 @@ Name: silverstripetemplate-configconfig
 ---
 Dynamic\TemplateConfig\Model\TemplateConfigSetting:
   extensions:
-    - Dynamic\TemplateConfig\ORM\TemplateConfig
-    - Dynamic\TemplateConfig\ORM\UtilityNavigationManager
-    - Dynamic\TemplateConfig\ORM\FooterNavigationManager
-    - Dynamic\TemplateConfig\ORM\SocialConfig
+    - Dynamic\TemplateConfig\ORM\BrandingDataExtension
+    - Dynamic\TemplateConfig\ORM\UtilityDataExtension
+    - Dynamic\TemplateConfig\ORM\FooterDataExtension
+    - Dynamic\TemplateConfig\ORM\SocialDataExtension

@@ -46,6 +46,9 @@ class TemplateConfigSetting extends DataObject
     {
         $fields = parent::getCMSFields();
 
+        $fields->fieldByName('Root')->fieldByName('Main')
+            ->setTitle('Branding');
+
         $fields->removeByName([
             'NavigationColumns',
             'UtilityLinks',

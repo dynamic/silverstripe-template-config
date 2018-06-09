@@ -3,16 +3,15 @@
 namespace Dynamic\TemplateConfig\Tests\TestOnly;
 
 use Dynamic\TemplateConfig\Model\TemplateConfigSetting;
-use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Dev\TestOnly;
-use Dynamic\TemplateConfig\ORM\UtilityNavigationManager;
+use Dynamic\TemplateConfig\ORM\UtilityDataExtension;
 
 /**
  * Class UtilitySiteConfig.
  */
 class UtilitySiteConfig extends TemplateConfigSetting implements TestOnly
 {
-    private static $extensions = [UtilityNavigationManager::class];
+    private static $extensions = [UtilityDataExtension::class];
 
     /**
      * @var string
