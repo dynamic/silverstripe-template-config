@@ -9,10 +9,12 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\View\TemplateGlobalProvider;
 
-class TemplateConfigSetting extends DataObject
+class TemplateConfigSetting extends DataObject implements PermissionProvider, TemplateGlobalProvider
 {
     /**
      * @var string
@@ -140,9 +142,9 @@ class TemplateConfigSetting extends DataObject
     public function providePermissions()
     {
         return [
-            'THEME_CONFIG_PERMISSION' => [
+            'TEMPLATE_CONFIG_PERMISSION' => [
                 'name' => _t(
-                    'Dynamic\\TemplateConfig\\Model\\TemplateConfig.THEME_CONFIG_PERMISSION',
+                    'Dynamic\\TemplateConfig\\Model\\TemplateConfig.TEMPLATE_CONFIG_PERMISSION',
                     "Access to '{title}' section",
                     ['title' => TemplateConfigAdmin::menu_title()]
                 ),
@@ -151,7 +153,7 @@ class TemplateConfigSetting extends DataObject
                     'CMS Access'
                 ),
                 'help' => _t(
-                    'TemplateConfig.EDIT_PERMISSION_GLOBAL_PERMISSION',
+                    'Dynamic\\TemplateConfig\\Model\\TemplateConfig.TEMPLATE_CONFIG_PERMISSION_HELP',
                     'Ability to edit template colors.'
                 ),
                 'sort' => 400,
