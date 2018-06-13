@@ -38,7 +38,6 @@ class BrandingDataExtension extends DataExtension
         'LogoRetina' => Image::class,
         'FooterLogo' => Image::class,
         'FooterLogoRetina' => Image::class,
-        'FooterLogoSecondary' => Image::class,
         'FavIcon' => File::class,
         'AppleTouchIcon180' => File::class,
         'AppleTouchIcon152' => File::class,
@@ -46,20 +45,6 @@ class BrandingDataExtension extends DataExtension
         'AppleTouchIcon72' => File::class,
         'AppleTouchIcon57' => File::class
     );
-
-    private static $owns = [
-        'Logo',
-        'LogoRetina',
-        'FooterLogo',
-        'FooterLogoRetina',
-        'FooterLogoSecondary',
-        'FavIcon',
-        'AppleTouchIcon180',
-        'AppleTouchIcon152',
-        'AppleTouchIcon114',
-        'AppleTouchIcon72',
-        'AppleTouchIcon57',
-    ];
 
     /**
      * @var array
@@ -100,7 +85,6 @@ class BrandingDataExtension extends DataExtension
             'LogoRetina',
             'FooterLogo',
             'FooterLogoRetina',
-            'FooterLogoSecondary',
             'FavIcon',
             'AppleTouchIcon180',
             'AppleTouchIcon152',
@@ -122,7 +106,6 @@ class BrandingDataExtension extends DataExtension
             ToggleCompositeField::create('FooterLogos', 'Footer', [
                 $footerLogo = UploadField::create('FooterLogo', 'Footer Logo'),
                 $footerLogoRetina = UploadField::create('FooterLogoRetina', 'Retina Footer Logo'),
-                $footerLogoSecondary = UploadField::create('FooterLogoSecondary', 'Secondary Footer Logo'),
             ]),
             // icons
             ToggleCompositeField::create('Icons', 'Icons', [
@@ -145,13 +128,61 @@ class BrandingDataExtension extends DataExtension
         $retinaLogo->getValidator()->setAllowedExtensions($logoTypes);
         $footerLogo->getValidator()->setAllowedExtensions($logoTypes);
         $footerLogoRetina->getValidator()->setAllowedExtensions($logoTypes);
-        $footerLogoSecondary->getValidator()->setAllowedExtensions($logoTypes);
         $favIcon->getValidator()->setAllowedExtensions($iconTypes);
         $appleTouchIcon180->getValidator()->setAllowedExtensions($appleTouchTypes);
         $appleTouchIcon152->getValidator()->setAllowedExtensions($appleTouchTypes);
         $appleTouchIcon114->getValidator()->setAllowedExtensions($appleTouchTypes);
         $appleTouchIcon72->getValidator()->setAllowedExtensions($appleTouchTypes);
         $appleTouchIcon57->getValidator()->setAllowedExtensions($appleTouchTypes);
+    }
+
+    /**
+     *
+     */
+    public function onAfterWrite()
+    {
+        parent::onAfterWrite();
+
+        if ($this->owner->Logo()->exists()) {
+            $this->owner->Logo()->publishRecursive();
+        }
+
+        if ($this->owner->LogoRetina()->exists()) {
+            $this->owner->LogoRetina()->publishRecursive();
+        }
+
+        if ($this->owner->FooterLogo()->exists()) {
+            $this->owner->FooterLogo()->publishRecursive();
+        }
+
+        if ($this->owner->FooterLogoRetina()->exists()) {
+            $this->owner->FooterLogoRetina()->publishRecursive();
+        }
+
+        if ($this->owner->FavIcon()->exists()) {
+            $this->owner->FavIcon()->publishRecursive();
+        }
+
+        if ($this->owner->AppleTouchIcon180()->exists()) {
+            $this->owner->AppleTouchIcon180()->publishRecursive();
+        }
+
+        if ($this->owner->AppleTouchIcon152()->exists()) {
+            $this->owner->AppleTouchIcon152()->publishRecursive();
+        }
+
+        if ($this->owner->AppleTouchIcon114()->exists()) {
+            $this->owner->AppleTouchIcon114()->publishRecursive();
+        }
+
+        if ($this->owner->AppleTouchIcon72()->exists()) {
+            $this->owner->AppleTouchIcon72()->publishRecursive();
+        }
+
+        if ($this->owner->AppleTouchIcon57()->exists()) {
+            $this->owner->AppleTouchIcon57()->publishRecursive();
+        }
+
     }
 
     /**
