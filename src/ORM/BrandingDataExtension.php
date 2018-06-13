@@ -109,12 +109,30 @@ class BrandingDataExtension extends DataExtension
             ]),
             // icons
             ToggleCompositeField::create('Icons', 'Icons', [
-                $favIcon = UploadField::create('FavIcon', 'Favicon, in .ico format, dimensions of 16x16, 32x32, or 48x48'),
-                $appleTouchIcon180 = UploadField::create('AppleTouchIcon180', 'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 180x180, PNG format)'),
-                $appleTouchIcon152 = UploadField::create('AppleTouchIcon152', 'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 152x152, PNG format)'),
-                $appleTouchIcon114 = UploadField::create('AppleTouchIcon114', 'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 114x114, PNG format)'),
-                $appleTouchIcon72 = UploadField::create('AppleTouchIcon72', 'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 72x72, PNG format)'),
-                $appleTouchIcon57 = UploadField::create('AppleTouchIcon57', 'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 57x57, PNG format)'),
+                $favIcon = UploadField::create(
+                    'FavIcon',
+                    'Favicon, in .ico format, dimensions of 16x16, 32x32, or 48x48'
+                ),
+                $appleTouchIcon180 = UploadField::create(
+                    'AppleTouchIcon180',
+                    'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 180x180, PNG format)'
+                ),
+                $appleTouchIcon152 = UploadField::create(
+                    'AppleTouchIcon152',
+                    'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 152x152, PNG format)'
+                ),
+                $appleTouchIcon114 = UploadField::create(
+                    'AppleTouchIcon114',
+                    'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 114x114, PNG format)'
+                ),
+                $appleTouchIcon72 = UploadField::create(
+                    'AppleTouchIcon72',
+                    'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 72x72, PNG format)'
+                ),
+                $appleTouchIcon57 = UploadField::create(
+                    'AppleTouchIcon57',
+                    'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 57x57, PNG format)'
+                ),
             ]),
         ));
 
@@ -182,7 +200,6 @@ class BrandingDataExtension extends DataExtension
         if ($this->owner->AppleTouchIcon57()->exists()) {
             $this->owner->AppleTouchIcon57()->publishRecursive();
         }
-
     }
 
     /**
