@@ -2,13 +2,13 @@
 
 namespace Dynamic\TemplateConfig\Model;
 
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
-use SilverStripe\Forms\LiteralField;
-use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
-use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\ORM\DataObject;
+use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
 /**
  * Class NavigationColumn.
@@ -123,11 +123,14 @@ class NavigationColumn extends DataObject
 
         // navigation groups
         if ($this->ID) {
-            $config = GridFieldConfig_RecordEditor::create();
-            $config->addComponent(new GridFieldOrderableRows('SortOrder'));
-            $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
-            $config->removeComponentsByType(GridFieldDeleteAction::class);
-            $config->addComponent(new GridFieldDeleteAction(false));
+            $config = GridFieldConfig_RecordEditor::create()
+                ->removeComponentsByType([
+                    GridFieldAddExistingAutocompleter::class,
+                    GridFieldDeleteAction::class,
+                ])->addComponents(
+                    new GridFieldOrderableRows('SortOrder'),
+                    new GridFieldDeleteAction(false)
+                );
             $footerLinks = GridField::create(
                 'NavigationGroups',
                 'Link Groups',
@@ -166,7 +169,7 @@ class NavigationColumn extends DataObject
      * Set permissions, allow all users to access by default.
      * Override in descendant classes, or use PermissionProvider.
      *
-     * @param null  $member
+     * @param null $member
      * @param array $context
      *
      * @return bool

@@ -32,11 +32,13 @@ class FooterDataExtension extends DataExtension
     {
         // footer navigation
         if ($this->owner->ID) {
-            $config = GridFieldConfig_RecordEditor::create();
-            $config->addComponent(new GridFieldOrderableRows('SortOrder'));
-            $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
-            $config->removeComponentsByType(GridFieldDeleteAction::class);
-            $config->addComponent(new GridFieldDeleteAction(false));
+            $config = GridFieldConfig_RecordEditor::create()->removeComponentsByType([
+                GridFieldAddExistingAutocompleter::class,
+                GridFieldDeleteAction::class,
+            ])->addComponents(
+                new GridFieldOrderableRows('SortOrder'),
+                new GridFieldDeleteAction(false)
+            );
             $footerLinks = GridField::create(
                 'NavigationColumns',
                 'Columns',
