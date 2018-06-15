@@ -2,17 +2,19 @@
 
 namespace Dynamic\TemplateConfig\ORM;
 
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataExtension;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\CMS\Model\SiteTree;
-use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use Symbiote\GridFieldExtensions\GridFieldAddExistingSearchButton;
+use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
 /**
  * Class UtilityNavigationManager.
@@ -42,10 +44,14 @@ class UtilityDataExtension extends DataExtension
     {
         if ($this->owner->ID) {
             $config = GridFieldConfig_RelationEditor::create()
-                ->addComponent(new GridFieldOrderableRows('SortOrder'))
-                ->removeComponentsByType(GridFieldAddExistingAutocompleter::class)
-                ->addComponent(new GridFieldAddExistingSearchButton())
-                ->removeComponentsByType(GridFieldAddNewButton::class);
+                ->removeComponentsByType([
+                    GridFieldAddNewButton::class,
+                    GridFieldAddExistingAutocompleter::class,
+                    GridFieldEditButton::class,
+                ])->addComponents(
+                    new GridFieldOrderableRows('SortOrder'),
+                    new GridFieldAddExistingSearchButton()
+                );
             $promos = $this->owner->UtilityLinks()->sort('SortOrder');
             $linksField = GridField::create(
                 'UtilityLinks',

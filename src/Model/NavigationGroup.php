@@ -2,15 +2,16 @@
 
 namespace Dynamic\TemplateConfig\Model;
 
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
-use SilverStripe\Forms\LiteralField;
-use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
-use Symbiote\GridFieldExtensions\GridFieldAddExistingSearchButton;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\ORM\DataObject;
+use Symbiote\GridFieldExtensions\GridFieldAddExistingSearchButton;
+use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
 /**
  * Class NavigationGroup.
@@ -35,31 +36,31 @@ class NavigationGroup extends DataObject
      * @var array
      */
     private static $db = array(
-      'Title' => 'Varchar(255)',
-      'SortOrder' => 'Int',
+        'Title' => 'Varchar(255)',
+        'SortOrder' => 'Int',
     );
 
     /**
      * @var array
      */
     private static $has_one = array(
-      'NavigationColumn' => NavigationColumn::class,
+        'NavigationColumn' => NavigationColumn::class,
     );
 
     /**
      * @var array
      */
     private static $many_many = array(
-      'NavigationLinks' => SiteTree::class,
+        'NavigationLinks' => SiteTree::class,
     );
 
     /**
      * @var array
      */
     private static $many_many_extraFields = array(
-      'NavigationLinks' => array(
-        'SortOrder' => 'Int',
-      ),
+        'NavigationLinks' => array(
+            'SortOrder' => 'Int',
+        ),
     );
 
     /**
@@ -105,9 +106,9 @@ class NavigationGroup extends DataObject
         $fields = parent::getCMSFields();
 
         $fields->removeByName(array(
-          'SortOrder',
-          'NavigationColumnID',
-          'NavigationLinks',
+            'SortOrder',
+            'NavigationColumnID',
+            'NavigationLinks',
         ));
 
         $fields->dataFieldByName('Title')
@@ -115,10 +116,14 @@ class NavigationGroup extends DataObject
 
         if ($this->ID) {
             $config = GridFieldConfig_RelationEditor::create()
-              ->addComponent(new GridFieldOrderableRows('SortOrder'))
-              ->removeComponentsByType(GridFieldAddExistingAutocompleter::class)
-              ->addComponent(new GridFieldAddExistingSearchButton())
-              ->removeComponentsByType(GridFieldAddNewButton::class);
+                ->removeComponentsByType([
+                    GridFieldAddNewButton::class,
+                    GridFieldAddExistingAutocompleter::class,
+                    GridFieldEditButton::class
+                ])->addComponents(
+                    new GridFieldOrderableRows('SortOrder'),
+                    new GridFieldAddExistingSearchButton()
+                );
             $promos = $this->NavigationLinks()->sort('SortOrder');
             $linksField = GridField::create(
                 'NavigationLinks',
@@ -158,7 +163,7 @@ class NavigationGroup extends DataObject
      * Set permissions, allow all users to access by default.
      * Override in descendant classes, or use PermissionProvider.
      *
-     * @param null  $member
+     * @param null $member
      * @param array $context
      *
      * @return bool
