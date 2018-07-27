@@ -17,7 +17,10 @@ use Symbiote\GridFieldExtensions\GridFieldAddExistingSearchButton;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
 /**
- * Class UtilityNavigationManager.
+ * Class UtilityDataExtension
+ * @package Dynamic\TemplateConfig\ORM
+ *
+ * @method \SilverStripe\ORM\ManyManyList UtilityLinks()
  */
 class UtilityDataExtension extends DataExtension
 {

@@ -2,14 +2,23 @@
 
 namespace Dynamic\TemplateConfig\Model;
 
-use Dynamic\TemplateConfig\Model\TemplateConfigSetting;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
 
 /**
- * Class SocialLink.
+ * Class SocialLink
+ * @package Dynamic\TemplateConfig\Model
+ *
+ * @property string $Title
+ * @property string $Link
+ * @property int $SortOrder
+ * @property string $Site
+ *
+ * @property int $GlobalConfigID
+ * @method TemplateConfigSetting GlobalConfig()
  */
 class SocialLink extends DataObject implements PermissionProvider
 {
@@ -63,23 +72,22 @@ class SocialLink extends DataObject implements PermissionProvider
      */
     public function getCMSFields()
     {
-        $fields = parent::getCMSFields();
+        $this->beforeUpdateCMSFields(function (FieldList $fields) {
+            $fields->removeByName(array(
+                'GlobalConfigID',
+                'SortOrder',
+            ));
 
-        $fields->removeByName(array(
-            'GlobalConfigID',
-            'SortOrder',
-        ));
-
-        $fields->addFieldToTab(
-            'Root.Main',
-            DropdownField::create(
-                'Site',
-                'Site',
-                $this->dbObject('Site')->enumValues()
-            )->setEmptyString('')
-        );
-
-        return $fields;
+            $fields->addFieldToTab(
+                'Root.Main',
+                DropdownField::create(
+                    'Site',
+                    'Site',
+                    $this->dbObject('Site')->enumValues()
+                )->setEmptyString('')
+            );
+        });
+        return parent::getCMSFields();
     }
 
     /**

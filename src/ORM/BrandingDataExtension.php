@@ -2,22 +2,45 @@
 
 namespace Dynamic\TemplateConfig\ORM;
 
+use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\ORM\DataExtension;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\AssetAdmin\Forms\UploadField;
-use SilverStripe\Forms\OptionsetField;
-use SilverStripe\Assets\Image;
 
 /**
  * Class TemplateConfig.
  *
  * @property string $TitleLogo
+ * @property string $Title
+ * @property string $TagLine
+ *
  * @property int $LogoID
+ * @property int $LogoRetinaID
+ * @property int $FooterLogoID
+ * @property int $FooterLogoRetinaID
+ * @property int $FavIconID
+ * @property int $AppleTouchIcon180ID
+ * @property int $AppleTouchIcon152ID
+ * @property int $AppleTouchIcon114ID
+ * @property int $AppleTouchIcon72ID
+ * @property int $AppleTouchIcon57ID
+ *
+ * @method Image Logo()
+ * @method Image LogoRetina()
+ * @method Image FooterLogo()
+ * @method Image FooterLogoRetina()
+ * @method Image FavIcon()
+ * @method Image AppleTouchIcon180()
+ * @method Image AppleTouchIcon152()
+ * @method Image AppleTouchIcon114()
+ * @method Image AppleTouchIcon72()
+ * @method Image AppleTouchIcon57()
  */
 class BrandingDataExtension extends DataExtension
 {
@@ -43,7 +66,7 @@ class BrandingDataExtension extends DataExtension
         'AppleTouchIcon152' => File::class,
         'AppleTouchIcon114' => File::class,
         'AppleTouchIcon72' => File::class,
-        'AppleTouchIcon57' => File::class
+        'AppleTouchIcon57' => File::class,
     );
 
     /**
@@ -62,14 +85,6 @@ class BrandingDataExtension extends DataExtension
         $iconTypes = array('ico');
         $appleTouchTypes = array('png');
 
-        $ImageField = UploadField::create('Logo');
-        $ImageField->getValidator()->allowedExtensions = array(
-            'jpg',
-            'gif',
-            'png',
-        );
-        $ImageField->setFolderName('Uploads/Logo');
-        $ImageField->setIsMultiUpload(false);
 
         // options for logo or title display
         $logoOptions = array(
@@ -93,6 +108,9 @@ class BrandingDataExtension extends DataExtension
             'AppleTouchIcon57',
         ]);
 
+        $icons = array();
+        $appleIcons = array();
+
         $fields->addFieldsToTab('Root.Main', array(
             HeaderField::create('BrandingHD', 'Branding', 3),
             LiteralField::create('HeaderDescrip', '<p>Adjust the settings of your template header.</p>'),
@@ -104,8 +122,8 @@ class BrandingDataExtension extends DataExtension
             $retinaLogo = UploadField::create('LogoRetina', 'Retina Logo'),
             // footer logos
             ToggleCompositeField::create('FooterLogos', 'Footer', [
-                $footerLogo = UploadField::create('FooterLogo', 'Footer Logo'),
-                $footerLogoRetina = UploadField::create('FooterLogoRetina', 'Retina Footer Logo'),
+                $icons[] = UploadField::create('FooterLogo', 'Footer Logo'),
+                $icons[] = UploadField::create('FooterLogoRetina', 'Retina Footer Logo'),
             ]),
             // icons
             ToggleCompositeField::create('Icons', 'Icons', [
@@ -113,23 +131,23 @@ class BrandingDataExtension extends DataExtension
                     'FavIcon',
                     'Favicon, in .ico format, dimensions of 16x16, 32x32, or 48x48'
                 ),
-                $appleTouchIcon180 = UploadField::create(
+                $appleIcons[] = UploadField::create(
                     'AppleTouchIcon180',
                     'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 180x180, PNG format)'
                 ),
-                $appleTouchIcon152 = UploadField::create(
+                $appleIcons[] = UploadField::create(
                     'AppleTouchIcon152',
                     'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 152x152, PNG format)'
                 ),
-                $appleTouchIcon114 = UploadField::create(
+                $appleIcons[] = UploadField::create(
                     'AppleTouchIcon114',
                     'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 114x114, PNG format)'
                 ),
-                $appleTouchIcon72 = UploadField::create(
+                $appleIcons[] = UploadField::create(
                     'AppleTouchIcon72',
                     'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 72x72, PNG format)'
                 ),
-                $appleTouchIcon57 = UploadField::create(
+                $appleIcons[] = UploadField::create(
                     'AppleTouchIcon57',
                     'Apple Touch Web Clip and Windows 8 Tile Icon (dimensions of 57x57, PNG format)'
                 ),
@@ -139,23 +157,24 @@ class BrandingDataExtension extends DataExtension
         $title->hideUnless($titlelogo->getName())->isEqualTo('Title');
         $tagline->hideUnless($titlelogo->getName())->isEqualTo('Title');
 
+        $icons[] = $logo;
         $logo->hideUnless($titlelogo->getName())->isEqualTo('Logo');
+        $icons[] = $retinaLogo;
         $retinaLogo->hideUnless($titlelogo->getName())->isEqualTo('Logo');
 
-        $logo->getValidator()->setAllowedExtensions($logoTypes);
-        $retinaLogo->getValidator()->setAllowedExtensions($logoTypes);
-        $footerLogo->getValidator()->setAllowedExtensions($logoTypes);
-        $footerLogoRetina->getValidator()->setAllowedExtensions($logoTypes);
+        foreach ($icons as $icon) {
+            $icon->getValidator()->setAllowedExtensions($logoTypes);
+        }
+
         $favIcon->getValidator()->setAllowedExtensions($iconTypes);
-        $appleTouchIcon180->getValidator()->setAllowedExtensions($appleTouchTypes);
-        $appleTouchIcon152->getValidator()->setAllowedExtensions($appleTouchTypes);
-        $appleTouchIcon114->getValidator()->setAllowedExtensions($appleTouchTypes);
-        $appleTouchIcon72->getValidator()->setAllowedExtensions($appleTouchTypes);
-        $appleTouchIcon57->getValidator()->setAllowedExtensions($appleTouchTypes);
+
+        foreach ($appleIcons as $icon) {
+            $icon->getValidator()->setAllowedExtensions($appleTouchTypes);
+        }
     }
 
     /**
-     *
+     * Because the owner object may not be versioned
      */
     public function onAfterWrite()
     {

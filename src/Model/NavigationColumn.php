@@ -2,6 +2,7 @@
 
 namespace Dynamic\TemplateConfig\Model;
 
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
@@ -15,7 +16,11 @@ use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
  *
  * @property string $Title
  * @property int $SortOrder
- * @property int $SiteConfigID
+ *
+ * @property int $GlobalConfigID
+ * @method TemplateConfigSetting GlobalConfig()
+ *
+ * @method \SilverStripe\ORM\HasManyList NavigationGroups()
  */
 class NavigationColumn extends DataObject
 {
@@ -28,6 +33,11 @@ class NavigationColumn extends DataObject
      * @var string
      */
     private static $plural_name = 'Columns';
+
+    /**
+     * @var string
+     */
+    private static $table_name = 'NavigationColumn';
 
     /**
      * @var array
@@ -68,6 +78,52 @@ class NavigationColumn extends DataObject
     ];
 
     /**
+     * @return \SilverStripe\Forms\FieldList
+     */
+    public function getCMSFields()
+    {
+        $this->beforeUpdateCMSFields(function (FieldList $fields) {
+            $fields->removeByName(array(
+                'GlobalConfigID',
+                'SortOrder',
+                'NavigationGroups',
+            ));
+
+            $fields->dataFieldByName('Title')
+                ->setDescription('For internal reference only');
+
+            // navigation groups
+            if ($this->ID) {
+                $config = GridFieldConfig_RecordEditor::create()
+                    ->removeComponentsByType([
+                        GridFieldAddExistingAutocompleter::class,
+                        GridFieldDeleteAction::class,
+                    ])->addComponents(
+                        new GridFieldOrderableRows('SortOrder'),
+                        new GridFieldDeleteAction(false)
+                    );
+                $footerLinks = GridField::create(
+                    'NavigationGroups',
+                    'Link Groups',
+                    $this->NavigationGroups()->sort('SortOrder'),
+                    $config
+                );
+
+                $fields->addFieldsToTab('Root.Main', array(
+                    LiteralField::create(
+                        'GroupDescrip',
+                        '<p>Create groups to populate with links to your footer navigation</p>'
+                    ),
+                    $footerLinks
+                        ->setDescription('Add a group of links to the footer navigation area'),
+                ));
+            }
+        });
+        return parent::getCMSFields();
+    }
+
+
+    /**
      * @return string
      */
     public function GroupList()
@@ -98,57 +154,6 @@ class NavigationColumn extends DataObject
         }
 
         return $i;
-    }
-
-    /**
-     * @var string
-     */
-    private static $table_name = 'NavigationColumn';
-
-    /**
-     * @return \SilverStripe\Forms\FieldList
-     */
-    public function getCMSFields()
-    {
-        $fields = parent::getCMSFields();
-
-        $fields->removeByName(array(
-            'GlobalConfigID',
-            'SortOrder',
-            'NavigationGroups',
-        ));
-
-        $fields->dataFieldByName('Title')
-            ->setDescription('For internal reference only');
-
-        // navigation groups
-        if ($this->ID) {
-            $config = GridFieldConfig_RecordEditor::create()
-                ->removeComponentsByType([
-                    GridFieldAddExistingAutocompleter::class,
-                    GridFieldDeleteAction::class,
-                ])->addComponents(
-                    new GridFieldOrderableRows('SortOrder'),
-                    new GridFieldDeleteAction(false)
-                );
-            $footerLinks = GridField::create(
-                'NavigationGroups',
-                'Link Groups',
-                $this->NavigationGroups()->sort('SortOrder'),
-                $config
-            );
-
-            $fields->addFieldsToTab('Root.Main', array(
-                LiteralField::create(
-                    'GroupDescrip',
-                    '<p>Create groups to populate with links to your footer navigation</p>'
-                ),
-                $footerLinks
-                    ->setDescription('Add a group of links to the footer navigation area'),
-            ));
-        }
-
-        return $fields;
     }
 
     /**

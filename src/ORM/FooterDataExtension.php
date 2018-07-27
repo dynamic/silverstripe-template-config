@@ -14,7 +14,10 @@ use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use Dynamic\TemplateConfig\Model\NavigationColumn;
 
 /**
- * Class FooterNavigationManager.
+ * Class FooterDataExtension
+ * @package Dynamic\TemplateConfig\ORM
+ *
+ * @method \SilverStripe\ORM\HasManyList NavigationColumns()
  */
 class FooterDataExtension extends DataExtension
 {

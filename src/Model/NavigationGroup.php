@@ -3,6 +3,7 @@
 namespace Dynamic\TemplateConfig\Model;
 
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
@@ -18,7 +19,9 @@ use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
  *
  * @property string $Title
  * @property int $SortOrder
+ *
  * @property int $NavigationColumnID
+ * @method NavigationColumn NavigationColumn()
  */
 class NavigationGroup extends DataObject
 {
@@ -103,46 +106,47 @@ class NavigationGroup extends DataObject
      */
     public function getCMSFields()
     {
-        $fields = parent::getCMSFields();
+        $this->beforeUpdateCMSFields(function (FieldList $fields) {
 
-        $fields->removeByName(array(
-            'SortOrder',
-            'NavigationColumnID',
-            'NavigationLinks',
-        ));
 
-        $fields->dataFieldByName('Title')
-            ->setDescription('For internal reference only');
-
-        if ($this->ID) {
-            $config = GridFieldConfig_RelationEditor::create()
-                ->removeComponentsByType([
-                    GridFieldAddNewButton::class,
-                    GridFieldAddExistingAutocompleter::class,
-                    GridFieldEditButton::class
-                ])->addComponents(
-                    new GridFieldOrderableRows('SortOrder'),
-                    new GridFieldAddExistingSearchButton()
-                );
-            $promos = $this->NavigationLinks()->sort('SortOrder');
-            $linksField = GridField::create(
+            $fields->removeByName(array(
+                'SortOrder',
+                'NavigationColumnID',
                 'NavigationLinks',
-                'Links',
-                $promos,
-                $config
-            );
-
-            $fields->addFieldsToTab('Root.Main', array(
-                LiteralField::create(
-                    'LinkDescrip',
-                    '<p>Add links to this group to display in your footer navigation</p>'
-                ),
-                $linksField
-                    ->setDescription('Add a link to this group'),
             ));
-        }
 
-        return $fields;
+            $fields->dataFieldByName('Title')
+                ->setDescription('For internal reference only');
+
+            if ($this->ID) {
+                $config = GridFieldConfig_RelationEditor::create()
+                    ->removeComponentsByType([
+                        GridFieldAddNewButton::class,
+                        GridFieldAddExistingAutocompleter::class,
+                        GridFieldEditButton::class
+                    ])->addComponents(
+                        new GridFieldOrderableRows('SortOrder'),
+                        new GridFieldAddExistingSearchButton()
+                    );
+                $promos = $this->NavigationLinks()->sort('SortOrder');
+                $linksField = GridField::create(
+                    'NavigationLinks',
+                    'Links',
+                    $promos,
+                    $config
+                );
+
+                $fields->addFieldsToTab('Root.Main', array(
+                    LiteralField::create(
+                        'LinkDescrip',
+                        '<p>Add links to this group to display in your footer navigation</p>'
+                    ),
+                    $linksField
+                        ->setDescription('Add a link to this group'),
+                ));
+            }
+        });
+        return parent::getCMSFields();
     }
 
     /**

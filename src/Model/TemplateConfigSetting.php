@@ -3,7 +3,6 @@
 namespace Dynamic\TemplateConfig\Model;
 
 use Dynamic\TemplateConfig\Admin\TemplateConfigAdmin;
-use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\DataObject;
@@ -14,6 +13,10 @@ use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\TemplateGlobalProvider;
 
+/**
+ * Class TemplateConfigSetting
+ * @package Dynamic\TemplateConfig\Model
+ */
 class TemplateConfigSetting extends DataObject implements PermissionProvider, TemplateGlobalProvider
 {
     /**
@@ -44,20 +47,29 @@ class TemplateConfigSetting extends DataObject implements PermissionProvider, Te
      */
     private static $required_permission = ['CMS_ACCESS_CMSMain', 'THEME_CONFIG_PERMISSION'];
 
+    /**
+     * Add $TemplateConfig to all SSViewers.
+     */
+    public static function get_template_global_variables()
+    {
+        return [
+            'TemplateConfig' => 'current_template_config',
+        ];
+    }
+
     public function getCMSFields()
     {
-        $fields = parent::getCMSFields();
+        $this->beforeUpdateCMSFields(function (FieldList $fields) {
+            $fields->fieldByName('Root')->fieldByName('Main')
+                ->setTitle('Branding');
 
-        $fields->fieldByName('Root')->fieldByName('Main')
-            ->setTitle('Branding');
-
-        $fields->removeByName([
-            'NavigationColumns',
-            'UtilityLinks',
-            'SocialLinks',
-        ]);
-
-        return $fields;
+            $fields->removeByName([
+                'NavigationColumns',
+                'UtilityLinks',
+                'SocialLinks',
+            ]);
+        });
+        return parent::getCMSFields();
     }
 
     /**
@@ -93,6 +105,36 @@ class TemplateConfigSetting extends DataObject implements PermissionProvider, Te
             self::make_template_config();
             DB::alteration_message('Added default template config', 'created');
         }
+    }
+
+    /**
+     * Get the current sites {@link GlobalSiteSetting}, and creates a new one
+     * through {@link make_template_config()} if none is found.
+     *
+     * @return GlobalSiteSetting|DataObject
+     * @throws ValidationException
+     */
+    public static function current_template_config()
+    {
+        if ($config = self::get()->first()) {
+            return $config;
+        }
+
+        return self::make_template_config();
+    }
+
+    /**
+     * Create {@link GlobalSiteSetting} with defaults from language file.
+     *
+     * @return static
+     * @throws ValidationException
+     */
+    public static function make_template_config()
+    {
+        $config = self::create();
+        $config->write();
+
+        return $config;
     }
 
     /**
@@ -158,46 +200,6 @@ class TemplateConfigSetting extends DataObject implements PermissionProvider, Te
                 ),
                 'sort' => 400,
             ],
-        ];
-    }
-
-    /**
-     * Get the current sites {@link GlobalSiteSetting}, and creates a new one
-     * through {@link make_template_config()} if none is found.
-     *
-     * @return GlobalSiteSetting|DataObject
-     * @throws ValidationException
-     */
-    public static function current_template_config()
-    {
-        if ($config = self::get()->first()) {
-            return $config;
-        }
-
-        return self::make_template_config();
-    }
-
-    /**
-     * Create {@link GlobalSiteSetting} with defaults from language file.
-     *
-     * @return static
-     * @throws ValidationException
-     */
-    public static function make_template_config()
-    {
-        $config = self::create();
-        $config->write();
-
-        return $config;
-    }
-
-    /**
-     * Add $TemplateConfig to all SSViewers.
-     */
-    public static function get_template_global_variables()
-    {
-        return [
-            'TemplateConfig' => 'current_template_config',
         ];
     }
 }
