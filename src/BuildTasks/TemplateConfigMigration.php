@@ -12,7 +12,6 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\SiteConfig\SiteConfig;
 
-
 /**
  * Class TemplateConfigMigration
  * @package Dynamic\TemplateConfig\BuildTasks
