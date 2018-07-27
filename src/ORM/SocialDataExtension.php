@@ -11,6 +11,12 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataExtension;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
+/**
+ * Class SocialDataExtension
+ * @package Dynamic\TemplateConfig\ORM
+ *
+ * @method \SilverStripe\ORM\HasManyList SocialLinks()
+ */
 class SocialDataExtension extends DataExtension
 {
     /**
