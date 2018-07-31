@@ -28,7 +28,7 @@ class TemplateConfigMigration extends BuildTask
         $templateConfig = TemplateConfigSetting::current_template_config();
         $siteConfig = SiteConfig::current_site_config();
 
-        $configUpdate = function ($object) {
+        $configUpdate = function ($object) use ($templateConfig) {
             $object->GlobalConfigID = $templateConfig->ID;
         };
 
