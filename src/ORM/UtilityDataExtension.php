@@ -10,17 +10,21 @@ use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataExtension;
 use Symbiote\GridFieldExtensions\GridFieldAddExistingSearchButton;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+use Symbiote\GridFieldExtensions\GridFieldTitleHeader;
 
 /**
  * Class UtilityDataExtension
  * @package Dynamic\TemplateConfig\ORM
  *
  * @method \SilverStripe\ORM\ManyManyList UtilityLinks()
+ *
+ * @property \Dynamic\TemplateConfig\ORM\UtilityDataExtension|\Dynamic\TemplateConfig\Model\TemplateConfigSetting $owner
  */
 class UtilityDataExtension extends DataExtension
 {
@@ -51,9 +55,11 @@ class UtilityDataExtension extends DataExtension
                     GridFieldAddNewButton::class,
                     GridFieldAddExistingAutocompleter::class,
                     GridFieldEditButton::class,
+                    GridFieldSortableHeader::class
                 ])->addComponents(
                     new GridFieldOrderableRows('SortOrder'),
-                    new GridFieldAddExistingSearchButton()
+                    new GridFieldAddExistingSearchButton(),
+                    new GridFieldTitleHeader()
                 );
             $promos = $this->owner->UtilityLinks()->sort('SortOrder');
             $linksField = GridField::create(

@@ -9,10 +9,12 @@ use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
 use Symbiote\GridFieldExtensions\GridFieldAddExistingSearchButton;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+use Symbiote\GridFieldExtensions\GridFieldTitleHeader;
 
 /**
  * Class NavigationGroup.
@@ -69,6 +71,11 @@ class NavigationGroup extends DataObject
     /**
      * @var string
      */
+    private static $default_sort = "SortOrder DESC";
+
+    /**
+     * @var string
+     */
     private static $table_name = 'NavigationGroup';
 
     /**
@@ -87,18 +94,15 @@ class NavigationGroup extends DataObject
     ];
 
     /**
-     * @return string
+     * @return int
      */
     public function LinkList()
     {
-        if ($this->NavigationLinks()) {
-            $i = 0;
-            foreach ($this->NavigationLinks()->sort('SortOrder') as $link) {
-                ++$i;
-            }
+        if (!$this->NavigationLinks()) {
+            return 0;
         }
 
-        return $i;
+        return $this->NavigationLinks()->count();
     }
 
     /**
@@ -123,12 +127,14 @@ class NavigationGroup extends DataObject
                     ->removeComponentsByType([
                         GridFieldAddNewButton::class,
                         GridFieldAddExistingAutocompleter::class,
-                        GridFieldEditButton::class
+                        GridFieldEditButton::class,
+                        GridFieldSortableHeader::class,
                     ])->addComponents(
                         new GridFieldOrderableRows('SortOrder'),
-                        new GridFieldAddExistingSearchButton()
+                        new GridFieldAddExistingSearchButton(),
+                        new GridFieldTitleHeader()
                     );
-                $promos = $this->NavigationLinks()->sort('SortOrder');
+                $promos = $this->NavigationLinks();
                 $linksField = GridField::create(
                     'NavigationLinks',
                     'Links',

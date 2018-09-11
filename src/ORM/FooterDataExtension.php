@@ -3,6 +3,7 @@
 namespace Dynamic\TemplateConfig\ORM;
 
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataExtension;
@@ -12,6 +13,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use Dynamic\TemplateConfig\Model\NavigationColumn;
+use Symbiote\GridFieldExtensions\GridFieldTitleHeader;
 
 /**
  * Class FooterDataExtension
@@ -38,9 +40,11 @@ class FooterDataExtension extends DataExtension
             $config = GridFieldConfig_RecordEditor::create()->removeComponentsByType([
                 GridFieldAddExistingAutocompleter::class,
                 GridFieldDeleteAction::class,
+                GridFieldSortableHeader::class
             ])->addComponents(
                 new GridFieldOrderableRows('SortOrder'),
-                new GridFieldDeleteAction(false)
+                new GridFieldDeleteAction(false),
+                new GridFieldTitleHeader()
             );
             $footerLinks = GridField::create(
                 'NavigationColumns',
