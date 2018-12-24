@@ -67,6 +67,8 @@ class TemplateConfigSetting extends DataObject implements PermissionProvider, Te
                 'NavigationColumns',
                 'UtilityLinks',
                 'SocialLinks',
+                'LinkTracking',
+                'FileTracking',
             ]);
         });
         return parent::getCMSFields();
