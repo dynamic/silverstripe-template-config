@@ -13,6 +13,7 @@ use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Versioned\GridFieldArchiveAction;
 use Symbiote\GridFieldExtensions\GridFieldAddExistingSearchButton;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
@@ -51,6 +52,7 @@ class UtilityDataExtension extends DataExtension
                     GridFieldAddNewButton::class,
                     GridFieldAddExistingAutocompleter::class,
                     GridFieldEditButton::class,
+                    GridFieldArchiveAction::class,
                 ])->addComponents(
                     new GridFieldOrderableRows('SortOrder'),
                     new GridFieldAddExistingSearchButton()

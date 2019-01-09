@@ -11,6 +11,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\GridFieldArchiveAction;
 use Symbiote\GridFieldExtensions\GridFieldAddExistingSearchButton;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
@@ -123,11 +124,13 @@ class NavigationGroup extends DataObject
                     ->removeComponentsByType([
                         GridFieldAddNewButton::class,
                         GridFieldAddExistingAutocompleter::class,
-                        GridFieldEditButton::class
+                        GridFieldEditButton::class,
+                        GridFieldArchiveAction::class,
                     ])->addComponents(
                         new GridFieldOrderableRows('SortOrder'),
                         new GridFieldAddExistingSearchButton()
                     );
+
                 $promos = $this->NavigationLinks()->sort('SortOrder');
                 $linksField = GridField::create(
                     'NavigationLinks',
