@@ -146,9 +146,11 @@ class TemplateConfigSetting extends DataObject implements PermissionProvider, Te
     {
         /** @var SiteConfig $siteconfig */
         $siteconfig = SiteConfig::current_site_config();
-        $siteconfig->Title = $this->Title;
-        $siteconfig->Tagline = $this->Tagline;
-        $siteconfig->write();
+        if (!$siteconfig->Title) {
+            $siteconfig->Title = $this->Title;
+            $siteconfig->Tagline = $this->Tagline;
+            $siteconfig->write();
+        }
 
         parent::onBeforeWrite();
     }
