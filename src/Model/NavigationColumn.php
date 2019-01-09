@@ -7,9 +7,11 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+use Symbiote\GridFieldExtensions\GridFieldTitleHeader;
 
 /**
  * Class NavigationColumn.
@@ -62,6 +64,11 @@ class NavigationColumn extends DataObject
     );
 
     /**
+     * @var string
+     */
+    private static $default_sort = "SortOrder DESC";
+
+    /**
      * @var array
      */
     private static $summary_fields = [
@@ -98,9 +105,11 @@ class NavigationColumn extends DataObject
                     ->removeComponentsByType([
                         GridFieldAddExistingAutocompleter::class,
                         GridFieldDeleteAction::class,
+                        GridFieldSortableHeader::class
                     ])->addComponents(
                         new GridFieldOrderableRows('SortOrder'),
-                        new GridFieldDeleteAction(false)
+                        new GridFieldDeleteAction(false),
+                        new GridFieldTitleHeader()
                     );
                 $footerLinks = GridField::create(
                     'NavigationGroups',
@@ -124,36 +133,33 @@ class NavigationColumn extends DataObject
 
 
     /**
+     * Gets the count of groups in the column.
+     * Used for the summary fields
+     *
      * @return string
      */
     public function GroupList()
     {
-        if ($this->NavigationGroups()) {
-            $i = 0;
-            foreach ($this->NavigationGroups()->sort('SortOrder') as $link) {
-                ++$i;
-            }
+        if (!$this->NavigationGroups()) {
+            return 0;
         }
 
-        return $i;
+        return $this->NavigationGroups()->count();
     }
 
     /**
+     * Gets the count of links in the column.
+     * Used for the summary fields
+     *
      * @return string
      */
     public function LinkList()
     {
-        $i = 0;
-
-        if ($this->NavigationGroups()) {
-            foreach ($this->NavigationGroups() as $group) {
-                foreach ($group->NavigationLinks() as $link) {
-                    ++$i;
-                }
-            }
+        if (!$this->NavigationGroups()) {
+            return 0;
         }
 
-        return $i;
+        return $this->NavigationGroups()->relation('NavigationLinks')->count();
     }
 
     /**

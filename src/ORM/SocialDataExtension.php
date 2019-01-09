@@ -6,10 +6,12 @@ use Dynamic\TemplateConfig\Model\SocialLink;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataExtension;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+use Symbiote\GridFieldExtensions\GridFieldTitleHeader;
 
 /**
  * Class SocialDataExtension
@@ -31,8 +33,14 @@ class SocialDataExtension extends DataExtension
      */
     public function updateCMSFields(FieldList $fields)
     {
-        $config = GridFieldConfig_RecordEditor::create();
-        $config->addComponent(new GridFieldOrderableRows('SortOrder'));
+        $config = GridFieldConfig_RecordEditor::create()
+            ->removeComponentsByType([
+                GridFieldSortableHeader::class,
+            ])
+            ->addComponents(
+                new GridFieldOrderableRows('SortOrder'),
+                new GridFieldTitleHeader()
+            );
 
         $socialLinks = GridField::create(
             'SocialLinks',
