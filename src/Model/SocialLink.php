@@ -38,12 +38,17 @@ class SocialLink extends DataObject implements PermissionProvider
     private static $table_name = 'SocialLink';
 
     /**
+     * @var bool
+     */
+    private static $show_google = false;
+
+    /**
      * @var array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Title' => 'Title',
         'Site' => 'Site',
-    );
+    ];
 
     /**
      * @var string
@@ -53,19 +58,19 @@ class SocialLink extends DataObject implements PermissionProvider
     /**
      * @var array
      */
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(150)',
         'Link' => 'Varchar(255)',
         'SortOrder' => 'Int',
         'Site' => 'Enum("facebook, youtube, twitter, linkedin, google, pinterest, instagram")',
-    );
+    ];
 
     /**
      * @var array
      */
-    private static $has_one = array(
+    private static $has_one = [
         'GlobalConfig' => TemplateConfigSetting::class,
-    );
+    ];
 
     /**
      * @return \SilverStripe\Forms\FieldList
@@ -73,21 +78,35 @@ class SocialLink extends DataObject implements PermissionProvider
     public function getCMSFields()
     {
         $this->beforeUpdateCMSFields(function (FieldList $fields) {
-            $fields->removeByName(array(
+            $fields->removeByName([
                 'GlobalConfigID',
                 'SortOrder',
-            ));
+            ]);
 
             $fields->addFieldToTab(
                 'Root.Main',
                 DropdownField::create(
                     'Site',
                     'Site',
-                    $this->dbObject('Site')->enumValues()
+                    $this->getNetworks()
                 )->setEmptyString('')
             );
         });
         return parent::getCMSFields();
+    }
+
+    /**
+     * @return array
+     */
+    protected function getNetworks()
+    {
+        $networks = $this->dbObject('Site')->enumValues();
+
+        if (!$this->config()->get('show_google')) {
+            unset($networks['google']);
+        }
+
+        return $networks;
     }
 
     /**
@@ -135,8 +154,8 @@ class SocialLink extends DataObject implements PermissionProvider
      */
     public function providePermissions()
     {
-        return array(
+        return [
             'Social_CRUD' => 'Create, Update and Delete a Social Link',
-        );
+        ];
     }
 }
